@@ -7,8 +7,23 @@ export const GET = async (request) => {
     try {
         await connectToDatabase();
 
-        const properties = await Property.find({}).lean();
-        return new Response(JSON.stringify(properties), { status: 200 });
+        const page = request.nextUrl.searchParams.get('page') || 1;
+        const limit = request.nextUrl.searchParams.get('limit') || 2;
+        const skip = (page - 1) * limit;
+
+        const totalProperties = await Property.countDocuments({});
+
+        const properties = await Property.find()
+            .skip(skip)
+            .limit(parseInt(limit))
+            .sort({ createdAt: -1 }).lean();
+
+        const result = {
+            total: totalProperties,
+            properties
+        }
+
+        return new Response(JSON.stringify(result), { status: 200 });
     } catch (error) {
         console.error(error);
         return new Response('Internal Server Error', { status: 500 });
