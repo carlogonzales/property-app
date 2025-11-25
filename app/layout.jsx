@@ -1,7 +1,11 @@
 import '@/assets/styles/globals.css'
+import 'photoswipe/dist/photoswipe.css'
 import NavBar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import AuthProvider from "@/components/AuthProvider";
+import { ToastContainer, toast } from 'react-toastify';
+
+import {GlobalProvider} from "@/context/GobalContext";
 
 export const metadata = {
     title: 'Property App | Find the perfect rental',
@@ -11,15 +15,18 @@ export const metadata = {
 
 const MainLayout = ({children}) => {
     return (
-            <html lang="en">
-                <body>
-                    <AuthProvider>
-                        <NavBar />
-                        <div id="app">{children}</div>
-                        <Footer />
-                    </AuthProvider>
-                </body>
-            </html>
+        <GlobalProvider>
+            <AuthProvider>
+                    <html lang="en">
+                        <body>
+                                <NavBar />
+                                <div id="app">{children}</div>
+                                <Footer />
+                                <ToastContainer />
+                        </body>
+                    </html>
+            </AuthProvider>
+        </GlobalProvider>
     )
 }
 
